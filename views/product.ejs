@@ -6,7 +6,7 @@
         <% if (images.length) { %>
           <div class="image-thumbs">
             <% images.forEach(function(img) { %>
-              <img src="<%= img.image_url %>" alt="" onclick="document.getElementById('mainImage').src=this.src">
+              <img src="<%= img.image_url %>" alt="" onclick="document.getElementById('mainImage').src=this.src;document.querySelectorAll('.image-thumbs img').forEach(e=>e.classList.remove('active'));this.classList.add('active')">
             <% }); %>
           </div>
         <% } %>
@@ -17,21 +17,21 @@
         <% } %>
         <h1><%= product.name %></h1>
         <p class="product-category"><%= product.category_name || '' %></p>
-        <div class="product-price">
+        <div class="product-price" style="margin:0.8rem 0">
           <% if (product.original_price && product.original_price > product.price) { %>
-            <span class="price-current">GH₵<%= parseFloat(product.price).toFixed(2) %></span>
-            <span class="price-old">GH₵<%= parseFloat(product.original_price).toFixed(2) %></span>
+            <span class="price-current" style="font-size:1.5rem">GH₵<%= parseFloat(product.price).toFixed(2) %></span>
+            <span class="price-old" style="font-size:1.1rem">GH₵<%= parseFloat(product.original_price).toFixed(2) %></span>
             <span class="discount-badge">Save GH₵<%= (product.original_price - product.price).toFixed(2) %></span>
           <% } else { %>
-            <span class="price-current">GH₵<%= parseFloat(product.price).toFixed(2) %></span>
+            <span class="price-current" style="font-size:1.5rem">GH₵<%= parseFloat(product.price).toFixed(2) %></span>
           <% } %>
         </div>
         <p class="product-description"><%= product.description %></p>
         <p class="product-stock">
           <% if (product.stock > 0) { %>
-            <span class="in-stock">In Stock (<%= product.stock %> available)</span>
+            <span class="in-stock">&#10004; In Stock (<%= product.stock %> available)</span>
           <% } else { %>
-            <span class="out-of-stock">Out of Stock</span>
+            <span class="out-of-stock">&#10008; Out of Stock</span>
           <% } %>
         </p>
 
@@ -40,7 +40,7 @@
             <h4>Options:</h4>
             <div class="variant-list">
               <% variants.forEach(function(v) { %>
-                <span class="variant-item <%= v.stock < 1 ? 'disabled' : '' %>" onclick="if(this.classList.contains('disabled')) return; document.querySelectorAll('.variant-item').forEach(el=>el.classList.remove('selected')); this.classList.add('selected'); document.getElementById('selectedVariant').value=this.dataset.name">
+                <span class="variant-item <%= v.stock < 1 ? 'disabled' : '' %>" data-name="<%= v.name %>">
                   <%= v.name %><% if (v.extra_price > 0) { %> (+GH₵<%= v.extra_price.toFixed(2) %>)<% } %>
                 </span>
               <% }); %>
@@ -48,20 +48,21 @@
           </div>
         <% } %>
 
-        <form action="/shop/cart/add/<%= product.id %>" method="POST" class="add-to-cart-form">
+        <form action="/shop/cart/add/<%= product.id %>" method="POST" class="add-to-cart-form" style="margin:1.5rem 0">
           <input type="hidden" name="variant" id="selectedVariant" value="">
-          <button type="submit" class="btn btn-primary btn-lg" <%= product.stock < 1 ? 'disabled' : '' %>>Add to Cart</button>
+          <button type="submit" class="btn btn-primary btn-lg" <%= product.stock < 1 ? 'disabled' : '' %> style="width:100%">Add to Cart</button>
         </form>
 
-        <% if (currentCustomer) { %>
-          <form action="/shop/wishlist/toggle/<%= product.id %>" method="POST" style="margin-top:0.5rem">
-            <button type="submit" class="btn btn-sm <%= inWishlist ? 'btn-danger' : 'btn-secondary' %>">
-              <%= inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' %>
-            </button>
-          </form>
-        <% } %>
-
-        <a href="/shop" class="btn btn-secondary" style="margin-top:0.5rem;display:inline-block">&larr; Back to Shop</a>
+        <div style="display:flex;gap:0.5rem">
+          <% if (currentCustomer) { %>
+            <form action="/shop/wishlist/toggle/<%= product.id %>" method="POST">
+              <button type="submit" class="btn btn-sm <%= inWishlist ? 'btn-danger' : 'btn-secondary' %>">
+                <%= inWishlist ? '♥ Remove from Wishlist' : '♡ Add to Wishlist' %>
+              </button>
+            </form>
+          <% } %>
+          <a href="/shop" class="btn btn-sm btn-secondary">&larr; Back to Shop</a>
+        </div>
       </div>
     </div>
 
@@ -82,27 +83,29 @@
           <% }); %>
         </div>
       <% } else { %>
-        <p>No reviews yet.</p>
+        <p style="color:#9a9aaa">No reviews yet.</p>
       <% } %>
       <div class="add-review">
         <h3>Write a Review</h3>
         <form action="/shop/review/<%= product.id %>" method="POST">
-          <div class="form-group">
-            <label>Rating</label>
-            <select name="rating" required>
-              <option value="5">5 - Excellent</option>
-              <option value="4">4 - Good</option>
-              <option value="3">3 - Average</option>
-              <option value="2">2 - Poor</option>
-              <option value="1">1 - Terrible</option>
-            </select>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rating</label>
+              <select name="rating" required>
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Good</option>
+                <option value="3">3 - Average</option>
+                <option value="2">2 - Poor</option>
+                <option value="1">1 - Terrible</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" name="customer_name" value="<%= currentCustomer ? currentCustomer.name : '' %>" required>
+            </div>
           </div>
           <div class="form-group">
-            <label for="customer_name">Name</label>
-            <input type="text" name="customer_name" value="<%= currentCustomer ? currentCustomer.name : '' %>" required>
-          </div>
-          <div class="form-group">
-            <label for="comment">Review</label>
+            <label>Review</label>
             <textarea name="comment" rows="3" required></textarea>
           </div>
           <button type="submit" class="btn btn-primary">Submit Review</button>
@@ -116,12 +119,13 @@
         <div class="product-grid">
           <% related.forEach(function(p) { %>
             <div class="product-card">
-              <a href="/shop/product/<%= p.id %>"><img src="<%= p.image %>" alt="<%= p.name %>" class="product-img"></a>
+              <a href="/shop/product/<%= p.id %>"><img src="<%= p.image %>" alt="<%= p.name %>" class="product-img" loading="lazy"></a>
               <div class="product-info">
                 <h3><%= p.name %></h3>
                 <div class="product-price">
                   <span class="price-current">GH₵<%= parseFloat(p.price).toFixed(2) %></span>
                 </div>
+                <a href="/shop/product/<%= p.id %>" class="btn btn-sm btn-primary" style="width:100%;text-align:center">View</a>
               </div>
             </div>
           <% }); %>

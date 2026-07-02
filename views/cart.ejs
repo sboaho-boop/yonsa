@@ -6,7 +6,7 @@
       <div class="cart-items">
         <% cart.forEach(function(item) { %>
           <div class="cart-item">
-            <img src="<%= item.image %>" alt="<%= item.name %>" class="cart-item-img">
+            <img src="<%= item.image %>" alt="<%= item.name %>" class="cart-item-img" loading="lazy">
             <div class="cart-item-info">
               <h3><%= item.name %></h3>
               <% if (item.variant) { %><p class="cart-item-variant"><%= item.variant %></p><% } %>
@@ -18,7 +18,7 @@
             </form>
             <p class="cart-item-total">GH₵<%= (item.price * item.quantity).toFixed(2) %></p>
             <form action="/shop/cart/remove/<%= item.cartKey %>" method="POST">
-              <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+              <button type="submit" class="btn btn-sm btn-danger">&#10005;</button>
             </form>
           </div>
         <% }); %>
@@ -27,18 +27,18 @@
       <div class="coupon-section">
         <form action="/shop/cart/apply-coupon" method="POST" class="coupon-form">
           <input type="text" name="code" placeholder="Enter coupon code" value="<%= coupon ? coupon.code : '' %>">
-          <button type="submit" class="btn btn-sm">Apply</button>
+          <button type="submit" class="btn btn-sm btn-primary">Apply</button>
         </form>
-        <% if (coupon) { %><span class="coupon-applied">Coupon applied: <%= coupon.code %> (<%= coupon.discount_type === 'percentage' ? coupon.discount_value + '%' : 'GH₵' + coupon.discount_value %> off)</span><% } %>
+        <% if (coupon) { %><span class="coupon-applied">&#10004; Coupon applied: <%= coupon.code %> (<%= coupon.discount_type === 'percentage' ? coupon.discount_value + '%' : 'GH₵' + coupon.discount_value %> off)</span><% } %>
       </div>
 
       <div class="cart-summary">
         <h3>Subtotal: GH₵<%= subtotal.toFixed(2) %></h3>
         <% if (discount > 0) { %>
           <p class="cart-discount">Discount: -GH₵<%= discount.toFixed(2) %></p>
-          <h3>Total: GH₵<%= (subtotal - discount).toFixed(2) %></h3>
+          <h3 style="color:#e85d75">Total: GH₵<%= (subtotal - discount).toFixed(2) %></h3>
         <% } %>
-        <a href="/shop/checkout" class="btn btn-primary">Proceed to Checkout</a>
+        <a href="/shop/checkout" class="btn btn-primary btn-lg" style="margin:0.5rem 0 0.5rem;display:inline-block">Proceed to Checkout</a>
         <a href="/shop" class="btn btn-secondary">Continue Shopping</a>
       </div>
     <% } else { %>

@@ -13,7 +13,7 @@
     <div class="category-grid">
       <% categories.forEach(function(c) { %>
         <a href="/shop?category=<%= encodeURIComponent(c.name) %>" class="category-card">
-          <img src="<%= c.image || 'https://via.placeholder.com/200x200?text=' + encodeURIComponent(c.name) %>" alt="<%= c.name %>">
+          <img src="<%= c.image || 'https://via.placeholder.com/300x300?text=' + encodeURIComponent(c.name) %>" alt="<%= c.name %>" loading="lazy">
           <h3><%= c.name %></h3>
         </a>
       <% }); %>
@@ -23,12 +23,12 @@
   <section class="section">
     <div class="section-header">
       <h2>Featured Products</h2>
-      <a href="/shop" class="btn btn-sm">View All</a>
+      <a href="/shop" class="btn btn-sm btn-primary">View All</a>
     </div>
     <div class="product-grid">
       <% featured.forEach(function(p) { %>
         <div class="product-card">
-          <img src="<%= p.image %>" alt="<%= p.name %>" class="product-img">
+          <a href="/shop/product/<%= p.id %>"><img src="<%= p.image %>" alt="<%= p.name %>" class="product-img" loading="lazy"></a>
           <div class="product-info">
             <h3><%= p.name %></h3>
             <p class="product-category"><%= p.category_name || '' %></p>
@@ -57,9 +57,9 @@
     <h2>On Sale</h2>
     <div class="product-grid">
       <% discounted.forEach(function(p) { %>
-        <div class="product-card sale">
+        <div class="product-card">
           <div class="sale-badge">SALE</div>
-          <img src="<%= p.image %>" alt="<%= p.name %>" class="product-img">
+          <a href="/shop/product/<%= p.id %>"><img src="<%= p.image %>" alt="<%= p.name %>" class="product-img" loading="lazy"></a>
           <div class="product-info">
             <h3><%= p.name %></h3>
             <div class="product-price">

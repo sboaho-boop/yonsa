@@ -10,14 +10,14 @@
       </div>
       <form action="/shop" method="GET" class="search-form">
         <input type="text" name="search" placeholder="Search products..." value="<%= search %>">
-        <button type="submit" class="btn btn-sm">Search</button>
+        <button type="submit" class="btn btn-sm btn-primary">Search</button>
       </form>
     </div>
     <div class="product-grid">
       <% if (products.length) { %>
         <% products.forEach(function(p) { %>
           <div class="product-card">
-            <a href="/shop/product/<%= p.id %>"><img src="<%= p.image %>" alt="<%= p.name %>" class="product-img"></a>
+            <a href="/shop/product/<%= p.id %>"><img src="<%= p.image %>" alt="<%= p.name %>" class="product-img" loading="lazy"></a>
             <div class="product-info">
               <h3><%= p.name %></h3>
               <p class="product-category"><%= p.category_name || '' %></p>
@@ -30,7 +30,7 @@
                 <% } %>
               </div>
               <form action="/shop/cart/add/<%= p.id %>" method="POST">
-                <button type="submit" class="btn btn-sm btn-primary">Add to Cart</button>
+                <button type="submit" class="btn btn-sm btn-primary" style="width:100%">Add to Cart</button>
               </form>
             </div>
           </div>

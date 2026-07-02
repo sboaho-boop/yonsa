@@ -2,7 +2,7 @@
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-col">
-        <h3>YONSA Mothercare</h3>
+        <h3>YONSA <span>Mothercare</span></h3>
         <p>Premium baby and maternity products. Caring for mothers and babies across Ghana.</p>
       </div>
       <div class="footer-col">
@@ -30,5 +30,15 @@
       <p>&copy; 2026 YONSA Mothercare. All rights reserved.</p>
     </div>
   </footer>
+  <script>
+    document.querySelectorAll('.variant-item').forEach(el => {
+      el.addEventListener('click', function() {
+        document.querySelectorAll('.variant-item').forEach(e => e.classList.remove('selected'));
+        this.classList.add('selected');
+        var input = document.getElementById('selectedVariant');
+        if (input) input.value = this.dataset.name;
+      });
+    });
+  </script>
 </body>
 </html>

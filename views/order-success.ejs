@@ -5,11 +5,9 @@
       <h1>Order Placed!</h1>
       <p>Thank you, <strong><%= order.customer_name %></strong>!</p>
       <p class="order-ref">Order Reference: <strong><%= order.order_ref %></strong></p>
-      <p>Total: <strong>GH₵<%= parseFloat(order.total).toFixed(2) %></strong></p>
+      <p style="font-size:1.2rem;color:#e85d75;font-weight:700">Total: GH₵<%= parseFloat(order.total).toFixed(2) %></p>
       <p>We'll process your order and send a confirmation to <%= order.customer_email %></p>
-      <p class="payment-info">
-        Payment via <strong><%= order.payment_method === 'mobile_money' ? 'Mobile Money (MTN/Telecel/AirtelTigo)' : order.payment_method === 'card' ? 'Visa/MasterCard' : 'Bank Transfer' %></strong>
-      </p>
+      <p class="payment-info">Payment via <strong><%= order.payment_method === 'mobile_money' ? 'Mobile Money (MTN/Telecel/AirtelTigo)' : order.payment_method === 'card' ? 'Visa/MasterCard' : 'Bank Transfer' %></strong></p>
       <div class="success-actions">
         <a href="/shop/track" class="btn btn-primary">Track Order</a>
         <a href="/shop" class="btn btn-secondary">Continue Shopping</a>
