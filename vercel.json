@@ -1,0 +1,8 @@
+{
+  "rootDirectory": "frontend",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}
