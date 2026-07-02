@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order — YONSA Mothercare</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">YONSA <span>Mothercare</span><small>Baby &amp; Maternity</small></a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">&#9776;</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a><a href="shop.html">Shop</a><a href="cart.html">Cart <span class="cart-count">0</span></a>
+        <a href="track.html">Track</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+    <section class="track-page">
+      <h1>Track Your Order</h1>
+      <div class="track-form">
+        <div class="form-group"><label>Email Address</label><input type="email" id="tr_email"></div>
+        <div class="form-group"><label>Order Reference</label><input type="text" id="tr_ref" placeholder="e.g. YON-ABC1234"></div>
+        <button onclick="trackOrder()" class="btn btn-primary">Track Order</button>
+      </div>
+      <div class="track-result" id="trackResult" style="display:none;margin-top:1.5rem"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-grid"><div class="footer-col"><h3>YONSA <span>Mothercare</span></h3></div><div class="footer-col"><h4>Links</h4><a href="index.html">Home</a><a href="shop.html">Shop</a></div></div>
+    <div class="container footer-bottom"><p>&copy; 2026 YONSA Mothercare</p></div>
+  </footer>
+  <script src="js/data.js"></script>
+  <script>
+    updateCartCount();
+    function trackOrder() {
+      const email = document.getElementById('tr_email').value;
+      const ref = document.getElementById('tr_ref').value;
+      const order = JSON.parse(localStorage.getItem('yonsa_order') || '{}');
+      const el = document.getElementById('trackResult');
+      if (order.email === email && order.ref === ref) {
+        const steps = [
+          { label: 'Order Placed', done: true, date: new Date(order.date).toLocaleDateString() },
+          { label: 'Processing', done: order.status === 'processing' || order.status === 'completed' },
+          { label: 'Completed', done: order.status === 'completed' },
+        ];
+        let html = '<div class="track-header"><h2>Order ' + ref + '</h2><span class="status pending">' + (order.status || 'pending') + '</span></div>' +
+          '<div class="track-details"><p><strong>Customer:</strong> ' + order.name + '</p><p><strong>Total:</strong> GH₵' + order.total + '</p></div>' +
+          '<div class="track-timeline">';
+        steps.forEach(s => {
+          html += '<div class="track-step' + (s.done ? ' completed' : '') + '"><div class="step-dot"></div><div><strong>' + s.label + '</strong>' + (s.date ? '<br>' + s.date : '') + '</div></div>';
+        });
+        html += '</div><a href="shop.html" class="btn btn-secondary">Continue Shopping</a>';
+        el.innerHTML = html;
+        el.style.display = 'block';
+      } else {
+        el.innerHTML = '<p class="error-msg">Order not found. Check your email and reference.</p>';
+        el.style.display = 'block';
+      }
+    }
+    const recentOrder = JSON.parse(localStorage.getItem('yonsa_order') || '{}');
+    if (recentOrder.ref) { document.getElementById('tr_ref').value = recentOrder.ref; document.getElementById('tr_email').value = recentOrder.email || ''; }
+  </script>
+</body>
+</html>

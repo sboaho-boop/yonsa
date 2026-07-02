@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart — YONSA Mothercare</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">YONSA <span>Mothercare</span><small>Baby &amp; Maternity</small></a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">&#9776;</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="cart.html">Cart <span class="cart-count">0</span></a>
+        <a href="track.html">Track</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+    <section class="cart-page">
+      <h1>Shopping Cart</h1>
+      <div id="cartContent"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-grid"><div class="footer-col"><h3>YONSA <span>Mothercare</span></h3><p>Premium baby and maternity products.</p></div><div class="footer-col"><h4>Links</h4><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="about.html">About</a></div><div class="footer-col"><h4>Contact</h4><p>Email: info@yonsa.com</p><p>Phone: +233 50 000 0000</p><p>Accra, Ghana</p></div></div>
+    <div class="container footer-bottom"><p>&copy; 2026 YONSA Mothercare</p></div>
+  </footer>
+  <script src="js/data.js"></script>
+  <script>
+    function renderCart() {
+      updateCartCount();
+      const cart = getCart();
+      const el = document.getElementById('cartContent');
+      if (!cart.length) {
+        el.innerHTML = '<div class="empty-cart"><p>Your cart is empty.</p><a href="shop.html" class="btn btn-primary">Start Shopping</a></div>';
+        return;
+      }
+      let html = '<div class="cart-items">';
+      let subtotal = 0;
+      const coupon = JSON.parse(sessionStorage.getItem('yonsa_coupon') || 'null');
+      cart.forEach(item => {
+        const total = item.price * item.qty;
+        subtotal += total;
+        html += '<div class="cart-item">' +
+          '<img src="' + item.img + '" alt="' + item.name + '" class="cart-item-img">' +
+          '<div class="cart-item-info"><h3>' + item.name + '</h3>' +
+          (item.variant ? '<p class="cart-item-variant">' + item.variant + '</p>' : '') +
+          '<p class="price-current">GH₵' + item.price.toFixed(2) + '</p></div>' +
+          '<div class="cart-item-qty"><input type="number" value="' + item.qty + '" min="1" max="99" onchange="updateQty(\'' + item.key + '\',this.value)"></div>' +
+          '<p class="cart-item-total">GH₵' + total.toFixed(2) + '</p>' +
+          '<button class="btn btn-sm btn-danger" onclick="removeItem(\'' + item.key + '\')">&#10005;</button>' +
+          '</div>';
+      });
+      html += '</div>';
+
+      let discount = 0;
+      if (coupon) {
+        if (coupon.type === 'percentage') discount = subtotal * (coupon.value / 100);
+        else discount = coupon.value;
+        discount = Math.min(discount, subtotal);
+      }
+
+      html += '<div class="cart-summary">' +
+        '<h3>Subtotal: GH₵' + subtotal.toFixed(2) + '</h3>';
+      if (discount > 0) {
+        html += '<p class="cart-discount">Discount: -GH₵' + discount.toFixed(2) + '</p>' +
+          '<h3 style="color:#e85d75">Total: GH₵' + (subtotal - discount).toFixed(2) + '</h3>';
+      }
+      html += '<a href="checkout.html" class="btn btn-primary btn-lg" style="margin:0.5rem 0;display:inline-block">Proceed to Checkout</a>' +
+        '<a href="shop.html" class="btn btn-secondary">Continue Shopping</a></div>';
+      el.innerHTML = html;
+    }
+
+    function updateQty(key, val) {
+      const cart = getCart();
+      const idx = cart.findIndex(i => i.key === key);
+      if (idx > -1) {
+        if (parseInt(val) > 0) cart[idx].qty = parseInt(val);
+        else cart.splice(idx, 1);
+        saveCart(cart);
+        renderCart();
+      }
+    }
+
+    function removeItem(key) {
+      const cart = getCart().filter(i => i.key !== key);
+      saveCart(cart);
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

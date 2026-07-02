@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — YONSA Mothercare</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">YONSA <span>Mothercare</span><small>Baby &amp; Maternity</small></a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">&#9776;</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="cart.html">Cart <span class="cart-count">0</span></a>
+        <a href="track.html">Track</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+    <section class="shop-page">
+      <h1>Shop</h1>
+      <div class="shop-header">
+        <div class="categories" id="catFilters">
+          <a href="shop.html" class="active">All</a>
+        </div>
+        <form class="search-form" onsubmit="event.preventDefault();filterProducts()">
+          <input type="text" id="searchInput" placeholder="Search products...">
+          <button type="submit" class="btn btn-sm btn-primary">Search</button>
+        </form>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>YONSA <span>Mothercare</span></h3>
+        <p>Premium baby and maternity products. Caring for mothers and babies across Ghana.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <a href="shop.html?cat=Baby Sets">Baby Sets</a>
+        <a href="shop.html?cat=Kids Wear">Kids Wear</a>
+        <a href="shop.html?cat=Maternity Wear">Maternity Wear</a>
+        <a href="shop.html?cat=Baby Shoes">Baby Shoes</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <p>Email: info@yonsa.com</p>
+        <p>Phone: +233 50 000 0000</p>
+        <p>Accra, Ghana</p>
+      </div>
+    </div>
+    <div class="container footer-bottom"><p>&copy; 2026 YONSA Mothercare</p></div>
+  </footer>
+  <script src="js/data.js"></script>
+  <script>
+    updateCartCount();
+    const catFilters = document.getElementById('catFilters');
+    categories.forEach(c => {
+      catFilters.innerHTML += '<a href="?cat=' + encodeURIComponent(c) + '">' + c + '</a>';
+    });
+
+    const params = new URLSearchParams(location.search);
+    const selectedCat = params.get('cat') || '';
+    const searchTerm = params.get('search') || '';
+
+    if (selectedCat) {
+      catFilters.querySelectorAll('a').forEach(a => {
+        if (a.textContent === selectedCat) a.classList.add('active');
+      });
+    }
+
+    function filterProducts() {
+      const s = document.getElementById('searchInput').value;
+      window.location.href = 'shop.html?search=' + encodeURIComponent(s) + (selectedCat ? '&cat=' + encodeURIComponent(selectedCat) : '');
+    }
+
+    if (searchTerm) document.getElementById('searchInput').value = searchTerm;
+
+    const grid = document.getElementById('productGrid');
+    let filtered = products;
+    if (selectedCat) filtered = filtered.filter(p => p.cat === selectedCat);
+    if (searchTerm) filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.desc.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    if (filtered.length) {
+      filtered.forEach(p => {
+        const sale = p.origPrice && p.origPrice > p.price;
+        grid.innerHTML += '<div class="product-card">' +
+          (sale ? '<div class="sale-badge">SALE</div>' : '') +
+          '<a href="product.html?id=' + p.id + '"><img src="' + p.img + '" alt="' + p.name + '" class="product-img" loading="lazy"></a>' +
+          '<div class="product-info">' +
+          '<h3>' + p.name + '</h3>' +
+          '<p class="product-category">' + p.cat + '</p>' +
+          '<div class="product-price">' +
+          (sale ? '<span class="price-current">GH₵' + p.price.toFixed(2) + '</span><span class="price-old">GH₵' + p.origPrice.toFixed(2) + '</span>' : '<span class="price-current">GH₵' + p.price.toFixed(2) + '</span>') +
+          '</div>' +
+          '<button onclick="addToCart(' + p.id + ',\'\');this.textContent=\'Added!\';setTimeout(()=>this.textContent=\'Add to Cart\',1000)" class="btn btn-sm btn-primary" style="width:100%">Add to Cart</button>' +
+          '</div></div>';
+      });
+    } else {
+      grid.innerHTML = '<p class="no-products" style="grid-column:1/-1;color:#9a9aaa;padding:3rem;text-align:center">No products found.</p>';
+    }
+  </script>
+</body>
+</html>

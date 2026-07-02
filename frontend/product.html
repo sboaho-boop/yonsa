@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — YONSA Mothercare</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">YONSA <span>Mothercare</span><small>Baby &amp; Maternity</small></a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">&#9776;</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="cart.html">Cart <span class="cart-count">0</span></a>
+        <a href="track.html">Track</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+    <section class="product-detail" id="productDetail"></section>
+    <section class="section" style="margin-top:3rem">
+      <h2>Related Products</h2>
+      <div class="product-grid" id="relatedProducts"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>YONSA <span>Mothercare</span></h3>
+        <p>Premium baby and maternity products. Caring for mothers and babies across Ghana.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <a href="shop.html?cat=Baby Sets">Baby Sets</a>
+        <a href="shop.html?cat=Kids Wear">Kids Wear</a>
+        <a href="shop.html?cat=Maternity Wear">Maternity Wear</a>
+        <a href="shop.html?cat=Baby Shoes">Baby Shoes</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <p>Email: info@yonsa.com</p>
+        <p>Phone: +233 50 000 0000</p>
+        <p>Accra, Ghana</p>
+      </div>
+    </div>
+    <div class="container footer-bottom"><p>&copy; 2026 YONSA Mothercare</p></div>
+  </footer>
+  <script src="js/data.js"></script>
+  <script>
+    updateCartCount();
+    const id = new URLSearchParams(location.search).get('id') || 1;
+    const p = getProductById(id);
+    const el = document.getElementById('productDetail');
+    if (p) {
+      const isSale = p.origPrice && p.origPrice > p.price;
+      el.innerHTML = '<div class="product-detail-grid">' +
+        '<div class="product-detail-image"><img src="' + p.img + '" alt="' + p.name + '"></div>' +
+        '<div class="product-detail-info">' +
+        (isSale ? '<div class="sale-badge-lg">SALE</div>' : '') +
+        '<h1>' + p.name + '</h1>' +
+        '<p class="product-category">' + p.cat + '</p>' +
+        '<div class="product-price" style="margin:0.8rem 0">' +
+        (isSale ? '<span class="price-current" style="font-size:1.5rem">GH₵' + p.price.toFixed(2) + '</span><span class="price-old" style="font-size:1.1rem">GH₵' + p.origPrice.toFixed(2) + '</span><span class="discount-badge">Save GH₵' + (p.origPrice - p.price).toFixed(2) + '</span>' : '<span class="price-current" style="font-size:1.5rem">GH₵' + p.price.toFixed(2) + '</span>') +
+        '</div>' +
+        '<p class="product-description">' + p.desc + '</p>' +
+        '<p class="product-stock"><span class="in-stock">&#10004; In Stock (' + p.stock + ' available)</span></p>' +
+        '<button onclick="addToCart(' + p.id + ',\'\');this.textContent=\'Added to Cart!\';setTimeout(()=>this.textContent=\'Add to Cart\',1500)" class="btn btn-primary btn-lg" style="width:100%;margin:1rem 0">Add to Cart</button>' +
+        '<a href="shop.html" class="btn btn-secondary">&larr; Back to Shop</a>' +
+        '</div></div>';
+
+      const related = products.filter(r => r.cat === p.cat && r.id !== p.id).slice(0, 4);
+      const rEl = document.getElementById('relatedProducts');
+      if (related.length) {
+        related.forEach(r => {
+          rEl.innerHTML += '<div class="product-card">' +
+            '<a href="product.html?id=' + r.id + '"><img src="' + r.img + '" class="product-img" loading="lazy"></a>' +
+            '<div class="product-info">' +
+            '<h3>' + r.name + '</h3>' +
+            '<div class="product-price"><span class="price-current">GH₵' + r.price.toFixed(2) + '</span></div>' +
+            '<a href="product.html?id=' + r.id + '" class="btn btn-sm btn-primary" style="width:100%;text-align:center">View</a>' +
+            '</div></div>';
+        });
+      } else {
+        rEl.innerHTML = '<p style="color:#9a9aaa">No related products.</p>';
+      }
+    } else {
+      el.innerHTML = '<p style="color:#9a9aaa;padding:3rem">Product not found. <a href="shop.html">Browse shop</a></p>';
+    }
+  </script>
+</body>
+</html>
