@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+  <section class="admin-page">
+    <h1>Categories</h1>
+    <form action="/admin/categories/add" method="POST" class="admin-form" style="max-width:100%">
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <input type="text" name="name" placeholder="Category name" required>
+        </div>
+        <div class="form-group" style="flex:2">
+          <input type="text" name="description" placeholder="Description">
+        </div>
+        <div class="form-group" style="flex:2">
+          <input type="text" name="image" placeholder="Image URL">
+        </div>
+        <div class="form-group" style="flex:0">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </div>
+    </form>
+    <table class="admin-table">
+      <thead><tr><th>Name</th><th>Products</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% categories.forEach(function(c) { %>
+          <tr>
+            <td><%= c.name %></td>
+            <td><%= c.product_count || 0 %></td>
+            <td class="actions">
+              <form action="/admin/categories/edit/<%= c.id %>" method="POST" style="display:inline-flex;gap:4px">
+                <input type="text" name="name" value="<%= c.name %>" style="width:120px;padding:4px;font-size:0.8rem">
+                <button type="submit" class="btn btn-sm">Update</button>
+              </form>
+              <form action="/admin/categories/delete/<%= c.id %>" method="POST" style="display:inline" onsubmit="return confirm('Delete this category? Products will be uncategorized.')">
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </section>
+<%- include('../partials/footer') %>

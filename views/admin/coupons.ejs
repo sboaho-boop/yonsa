@@ -1,0 +1,43 @@
+<%- include('../partials/header') %>
+  <section class="admin-page">
+    <h1>Coupons</h1>
+    <% if (error) { %><p class="error-msg"><%= error %></p><% } %>
+    <form action="/admin/coupons/add" method="POST" class="admin-form" style="max-width:100%">
+      <div class="form-row">
+        <div class="form-group"><input type="text" name="code" placeholder="Code" required></div>
+        <div class="form-group">
+          <select name="discount_type">
+            <option value="percentage">Percentage</option>
+            <option value="fixed">Fixed (GH₵)</option>
+          </select>
+        </div>
+        <div class="form-group"><input type="number" name="discount_value" placeholder="Value" step="0.01" required></div>
+        <div class="form-group"><input type="number" name="min_amount" placeholder="Min order" step="0.01"></div>
+        <div class="form-group"><input type="number" name="max_uses" placeholder="Max uses"></div>
+        <div class="form-group"><input type="date" name="expires_at"></div>
+        <div class="form-group"><button type="submit" class="btn btn-primary">Add</button></div>
+      </div>
+    </form>
+    <table class="admin-table">
+      <thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Order</th><th>Used</th><th>Max Uses</th><th>Expires</th><th></th></tr></thead>
+      <tbody>
+        <% coupons.forEach(function(c) { %>
+          <tr>
+            <td><strong><%= c.code %></strong></td>
+            <td><%= c.discount_type %></td>
+            <td><%= c.discount_type === 'percentage' ? c.discount_value + '%' : 'GH₵' + parseFloat(c.discount_value).toFixed(2) %></td>
+            <td>GH₵<%= parseFloat(c.min_amount).toFixed(2) %></td>
+            <td><%= c.used_count %>/<%= c.max_uses || '∞' %></td>
+            <td><%= c.max_uses || 'Unlimited' %></td>
+            <td><%= c.expires_at ? new Date(c.expires_at).toLocaleDateString() : '-' %></td>
+            <td>
+              <form action="/admin/coupons/delete/<%= c.id %>" method="POST" style="display:inline" onsubmit="return confirm('Delete this coupon?')">
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </section>
+<%- include('../partials/footer') %>

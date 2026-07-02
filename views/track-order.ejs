@@ -1,0 +1,47 @@
+<%- include('partials/header') %>
+  <section class="track-page">
+    <h1>Track Your Order</h1>
+    <% if (error) { %><p class="error-msg"><%= error %></p><% } %>
+    <% if (!order) { %>
+      <form action="/shop/track" method="POST" class="track-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="order_ref">Order Reference</label>
+          <input type="text" name="order_ref" placeholder="e.g. YON-ABC1234" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Track Order</button>
+      </form>
+    <% } else { %>
+      <div class="track-result">
+        <div class="track-header">
+          <h2>Order <%= order.order_ref %></h2>
+          <span class="status <%= order.status %>"><%= order.status %></span>
+        </div>
+        <div class="track-details">
+          <p><strong>Customer:</strong> <%= order.customer_name %></p>
+          <p><strong>Email:</strong> <%= order.customer_email %></p>
+          <p><strong>Total:</strong> GH₵<%= parseFloat(order.total).toFixed(2) %></p>
+          <p><strong>Date:</strong> <%= new Date(order.created_at).toLocaleDateString() %></p>
+        </div>
+        <div class="track-timeline">
+          <div class="track-step <%= order.status !== 'cancelled' ? 'completed' : '' %>">
+            <div class="step-dot"></div>
+            <div><strong>Order Placed</strong><br><%= new Date(order.created_at).toLocaleDateString() %></div>
+          </div>
+          <div class="track-step <%= ['processing','completed'].includes(order.status) ? 'completed' : '' %>">
+            <div class="step-dot"></div>
+            <div><strong>Processing</strong></div>
+          </div>
+          <div class="track-step <%= order.status === 'completed' ? 'completed' : '' %>">
+            <div class="step-dot"></div>
+            <div><strong>Completed</strong></div>
+          </div>
+        </div>
+        <a href="/shop" class="btn btn-secondary">Continue Shopping</a>
+      </div>
+    <% } %>
+  </section>
+<%- include('partials/footer') %>

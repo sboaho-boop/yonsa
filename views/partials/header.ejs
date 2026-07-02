@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YONSA Mothercare - Baby & Maternity Shop</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="logo">YONSA <span>Mothercare</span></a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">&#9776;</button>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/shop/cart">Cart (<span class="cart-count"><%= cart ? cart.reduce((s, i) => s + i.quantity, 0) : 0 %></span>)</a>
+        <% if (currentCustomer) { %>
+          <a href="/account">My Account</a>
+          <a href="/account/logout">Logout</a>
+        <% } else { %>
+          <a href="/account/login">Sign In</a>
+        <% } %>
+        <% if (isAdmin) { %>
+          <a href="/admin">Admin</a>
+        <% } else { %>
+          <a href="/login">Admin</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+  <main class="container">

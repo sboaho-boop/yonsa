@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+  <section class="admin-page">
+    <h1>Reports & Analytics</h1>
+    <div class="admin-actions">
+      <a href="/admin/reports?period=day" class="btn <%= period === 'day' ? 'btn-primary' : '' %>">Daily</a>
+      <a href="/admin/reports?period=month" class="btn <%= period === 'month' ? 'btn-primary' : '' %>">Monthly</a>
+      <a href="/admin/reports?period=year" class="btn <%= period === 'year' ? 'btn-primary' : '' %>">Yearly</a>
+    </div>
+
+    <div class="admin-section">
+      <h2>Sales Overview</h2>
+      <table class="admin-table">
+        <thead><tr><th>Period</th><th>Orders</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <% sales.forEach(function(s) { %>
+            <tr><td><%= s.period %></td><td><%= s.order_count %></td><td>GH₵<%= parseFloat(s.revenue).toFixed(2) %></td></tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-section">
+      <h2>Revenue by Category</h2>
+      <table class="admin-table">
+        <thead><tr><th>Category</th><th>Items Sold</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <% byCategory.forEach(function(c) { %>
+            <tr><td><%= c.category || 'Uncategorized' %></td><td><%= c.items_sold || 0 %></td><td>GH₵<%= parseFloat(c.revenue || 0).toFixed(2) %></td></tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-section">
+      <h2>Best Selling Products</h2>
+      <table class="admin-table">
+        <thead><tr><th>Product</th><th>Quantity Sold</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <% topProducts.forEach(function(p) { %>
+            <tr><td><%= p.product_name %></td><td><%= p.qty %></td><td>GH₵<%= parseFloat(p.revenue).toFixed(2) %></td></tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (lowStock.length) { %>
+      <div class="admin-section">
+        <h2>Low Stock Alert</h2>
+        <table class="admin-table">
+          <thead><tr><th>Product</th><th>Current Stock</th></tr></thead>
+          <tbody>
+            <% lowStock.forEach(function(p) { %>
+              <tr><td><%= p.name %></td><td class="text-danger"><%= p.stock %></td></tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+<%- include('../partials/footer') %>

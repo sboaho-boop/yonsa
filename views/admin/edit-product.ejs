@@ -1,0 +1,141 @@
+<%- include('../partials/header') %>
+  <section class="admin-page">
+    <h1>Edit Product</h1>
+    <% if (error) { %><p class="error-msg"><%= error %></p><% } %>
+    <form action="/admin/products/edit/<%= product.id %>" method="POST" class="admin-form">
+      <div class="form-group">
+        <label for="name">Product Name *</label>
+        <input type="text" id="name" name="name" value="<%= product.name %>" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4"><%= product.description %></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price">Price (GH₵) *</label>
+          <input type="number" id="price" name="price" step="0.01" min="0" value="<%= product.price %>" required>
+        </div>
+        <div class="form-group">
+          <label for="original_price">Original Price</label>
+          <input type="number" id="original_price" name="original_price" step="0.01" min="0" value="<%= product.original_price || '' %>">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category_id">Category</label>
+          <select id="category_id" name="category_id">
+            <option value="">None</option>
+            <% categories.forEach(function(c) { %>
+              <option value="<%= c.id %>" <%= product.category_id == c.id ? 'selected' : '' %>><%= c.name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="stock">Stock</label>
+          <input type="number" id="stock" name="stock" min="0" value="<%= product.stock %>">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <option value="active" <%= product.status === 'active' ? 'selected' : '' %>>Active</option>
+            <option value="inactive" <%= product.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Featured</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;margin-top:0.4rem">
+            <input type="checkbox" name="featured" value="1" <%= product.featured == 1 ? 'checked' : '' %>> Show as featured
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="image">Image URL</label>
+        <input type="text" id="image" name="image" value="<%= product.image %>">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="/admin/products" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+
+    <div class="admin-section" style="margin-top:2rem">
+      <h2>Additional Images</h2>
+      <form action="/admin/products/images/add/<%= product.id %>" method="POST" class="admin-form" style="max-width:100%">
+        <div class="form-row">
+          <div class="form-group" style="flex:3">
+            <input type="text" name="image_url" placeholder="Image URL">
+          </div>
+          <div class="form-group" style="flex:1">
+            <button type="submit" class="btn btn-sm">Add Image</button>
+          </div>
+        </div>
+      </form>
+      <% if (images.length) { %>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem">
+          <% images.forEach(function(img) { %>
+            <div style="position:relative;width:80px">
+              <img src="<%= img.image_url %>" style="width:80px;height:80px;object-fit:cover;border-radius:4px">
+              <form action="/admin/products/images/delete/<%= product.id %>/<%= img.id %>" method="POST" style="position:absolute;top:-6px;right:-6px">
+                <button type="submit" style="background:#dc3545;color:#fff;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px">&times;</button>
+              </form>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+
+    <div class="admin-section" style="margin-top:2rem">
+      <h2>Variants (Sizes / Colors)</h2>
+      <form action="/admin/products/variants/add/<%= product.id %>" method="POST" class="admin-form" style="max-width:100%">
+        <div class="form-row">
+          <div class="form-group" style="flex:2">
+            <input type="text" name="name" placeholder="e.g. Size S, Blue" required>
+          </div>
+          <div class="form-group" style="flex:1">
+            <input type="number" name="extra_price" placeholder="Extra price" step="0.01" min="0">
+          </div>
+          <div class="form-group" style="flex:1">
+            <input type="number" name="stock" placeholder="Stock" min="0">
+          </div>
+          <div class="form-group" style="flex:0">
+            <button type="submit" class="btn btn-sm">Add</button>
+          </div>
+        </div>
+      </form>
+      <% if (variants.length) { %>
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Extra Price</th><th>Stock</th><th></th></tr></thead>
+          <tbody>
+            <% variants.forEach(function(v) { %>
+              <tr>
+                <td><%= v.name %></td>
+                <td>GH₵<%= parseFloat(v.extra_price).toFixed(2) %></td>
+                <td><%= v.stock %></td>
+                <td>
+                  <form action="/admin/products/variants/delete/<%= product.id %>/<%= v.id %>" method="POST" style="display:inline">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+
+    <div class="admin-section" style="margin-top:2rem">
+      <h2>Reviews</h2>
+      <% if (reviews.length) { %>
+        <% reviews.forEach(function(r) { %>
+          <div style="background:#f9f9f9;padding:0.8rem;border-radius:6px;margin-bottom:0.5rem">
+            <strong><%= r.customer_name %></strong> - <%= r.rating %>/5
+            <p><%= r.comment %></p>
+          </div>
+        <% }); %>
+      <% } else { %><p>No reviews yet.</p><% } %>
+    </div>
+  </section>
+<%- include('../partials/footer') %>

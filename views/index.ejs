@@ -1,0 +1,101 @@
+<%- include('partials/header') %>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>YONSA Mothercare</h1>
+      <p>Mid-Year Sale — Up to 40% Off on Baby &amp; Maternity Essentials</p>
+      <p class="hero-sub">Premium products for mothers and babies across Ghana</p>
+      <a href="/shop" class="btn btn-primary btn-lg">Shop Now</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Shop by Category</h2>
+    <div class="category-grid">
+      <% categories.forEach(function(c) { %>
+        <a href="/shop?category=<%= encodeURIComponent(c.name) %>" class="category-card">
+          <img src="<%= c.image || 'https://via.placeholder.com/200x200?text=' + encodeURIComponent(c.name) %>" alt="<%= c.name %>">
+          <h3><%= c.name %></h3>
+        </a>
+      <% }); %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Featured Products</h2>
+      <a href="/shop" class="btn btn-sm">View All</a>
+    </div>
+    <div class="product-grid">
+      <% featured.forEach(function(p) { %>
+        <div class="product-card">
+          <img src="<%= p.image %>" alt="<%= p.name %>" class="product-img">
+          <div class="product-info">
+            <h3><%= p.name %></h3>
+            <p class="product-category"><%= p.category_name || '' %></p>
+            <div class="product-price">
+              <% if (p.original_price && p.original_price > p.price) { %>
+                <span class="price-current">GH₵<%= parseFloat(p.price).toFixed(2) %></span>
+                <span class="price-old">GH₵<%= parseFloat(p.original_price).toFixed(2) %></span>
+              <% } else { %>
+                <span class="price-current">GH₵<%= parseFloat(p.price).toFixed(2) %></span>
+              <% } %>
+            </div>
+            <div class="product-actions">
+              <a href="/shop/product/<%= p.id %>" class="btn btn-sm">Details</a>
+              <form action="/shop/cart/add/<%= p.id %>" method="POST" style="display:inline">
+                <button type="submit" class="btn btn-sm btn-primary">Add to Cart</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </section>
+
+  <% if (discounted.length) { %>
+  <section class="section sale-section">
+    <h2>On Sale</h2>
+    <div class="product-grid">
+      <% discounted.forEach(function(p) { %>
+        <div class="product-card sale">
+          <div class="sale-badge">SALE</div>
+          <img src="<%= p.image %>" alt="<%= p.name %>" class="product-img">
+          <div class="product-info">
+            <h3><%= p.name %></h3>
+            <div class="product-price">
+              <span class="price-current">GH₵<%= parseFloat(p.price).toFixed(2) %></span>
+              <span class="price-old">GH₵<%= parseFloat(p.original_price).toFixed(2) %></span>
+            </div>
+            <div class="product-actions">
+              <a href="/shop/product/<%= p.id %>" class="btn btn-sm">Details</a>
+              <form action="/shop/cart/add/<%= p.id %>" method="POST" style="display:inline">
+                <button type="submit" class="btn btn-sm btn-primary">Add to Cart</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (reviews.length) { %>
+  <section class="section">
+    <h2>What Our Customers Say</h2>
+    <div class="reviews-grid">
+      <% reviews.forEach(function(r) { %>
+        <div class="review-card">
+          <div class="stars">
+            <% for (var i = 0; i < 5; i++) { %>
+              <span class="star <%= i < r.rating ? 'filled' : '' %>">&#9733;</span>
+            <% } %>
+          </div>
+          <p>"<%= r.comment %>"</p>
+          <span class="review-author">— <%= r.customer_name %></span>
+        </div>
+      <% }); %>
+    </div>
+  </section>
+  <% } %>
+
+<%- include('partials/footer') %>

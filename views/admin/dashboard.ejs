@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+  <section class="admin-page">
+    <h1>Admin Dashboard</h1>
+    <div class="stats-grid">
+      <div class="stat-card"><h3><%= stats.products %></h3><p>Products</p></div>
+      <div class="stat-card"><h3><%= stats.orders %></h3><p>Orders</p></div>
+      <div class="stat-card"><h3><%= stats.customers %></h3><p>Customers</p></div>
+      <div class="stat-card"><h3>GH₵<%= parseFloat(stats.revenue).toFixed(2) %></h3><p>Revenue</p></div>
+    </div>
+    <div class="admin-actions">
+      <a href="/admin/products" class="btn">Manage Products</a>
+      <a href="/admin/products/add" class="btn btn-primary">Add Product</a>
+      <a href="/admin/orders" class="btn">Orders</a>
+      <a href="/admin/categories" class="btn">Categories</a>
+      <a href="/admin/coupons" class="btn">Coupons</a>
+      <a href="/admin/reports" class="btn">Reports</a>
+    </div>
+    <div class="admin-section">
+      <h2>Recent Orders</h2>
+      <% if (orders.length) { %>
+        <table class="admin-table">
+          <thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th></th></tr></thead>
+          <tbody>
+            <% orders.forEach(function(o) { %>
+              <tr>
+                <td><%= o.order_ref || o.id %></td>
+                <td><%= o.customer_name %></td>
+                <td>GH₵<%= parseFloat(o.total).toFixed(2) %></td>
+                <td><span class="status <%= o.status %>"><%= o.status %></span></td>
+                <td><%= new Date(o.created_at).toLocaleDateString() %></td>
+                <td><a href="/admin/orders" class="btn btn-sm">View</a></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %><p>No orders yet.</p><% } %>
+    </div>
+
+    <% if (lowStock.length) { %>
+      <div class="admin-section">
+        <h2>Low Stock Alert</h2>
+        <table class="admin-table">
+          <thead><tr><th>Product</th><th>Stock</th></tr></thead>
+          <tbody>
+            <% lowStock.forEach(function(p) { %>
+              <tr><td><%= p.name %></td><td class="text-danger"><%= p.stock %></td></tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+
+    <% if (monthlySales.length) { %>
+      <div class="admin-section">
+        <h2>Monthly Sales</h2>
+        <table class="admin-table">
+          <thead><tr><th>Month</th><th>Orders</th><th>Revenue</th></tr></thead>
+          <tbody>
+            <% monthlySales.forEach(function(s) { %>
+              <tr><td><%= s.month %></td><td><%= s.orders %></td><td>GH₵<%= parseFloat(s.revenue).toFixed(2) %></td></tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+<%- include('../partials/footer') %>

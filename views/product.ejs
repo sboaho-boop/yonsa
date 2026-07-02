@@ -1,0 +1,132 @@
+<%- include('partials/header') %>
+  <section class="product-detail">
+    <div class="product-detail-grid">
+      <div class="product-detail-image">
+        <img src="<%= product.image %>" alt="<%= product.name %>" id="mainImage">
+        <% if (images.length) { %>
+          <div class="image-thumbs">
+            <% images.forEach(function(img) { %>
+              <img src="<%= img.image_url %>" alt="" onclick="document.getElementById('mainImage').src=this.src">
+            <% }); %>
+          </div>
+        <% } %>
+      </div>
+      <div class="product-detail-info">
+        <% if (product.original_price && product.original_price > product.price) { %>
+          <div class="sale-badge-lg">SALE</div>
+        <% } %>
+        <h1><%= product.name %></h1>
+        <p class="product-category"><%= product.category_name || '' %></p>
+        <div class="product-price">
+          <% if (product.original_price && product.original_price > product.price) { %>
+            <span class="price-current">GH₵<%= parseFloat(product.price).toFixed(2) %></span>
+            <span class="price-old">GH₵<%= parseFloat(product.original_price).toFixed(2) %></span>
+            <span class="discount-badge">Save GH₵<%= (product.original_price - product.price).toFixed(2) %></span>
+          <% } else { %>
+            <span class="price-current">GH₵<%= parseFloat(product.price).toFixed(2) %></span>
+          <% } %>
+        </div>
+        <p class="product-description"><%= product.description %></p>
+        <p class="product-stock">
+          <% if (product.stock > 0) { %>
+            <span class="in-stock">In Stock (<%= product.stock %> available)</span>
+          <% } else { %>
+            <span class="out-of-stock">Out of Stock</span>
+          <% } %>
+        </p>
+
+        <% if (variants.length) { %>
+          <div class="variants">
+            <h4>Options:</h4>
+            <div class="variant-list">
+              <% variants.forEach(function(v) { %>
+                <span class="variant-item <%= v.stock < 1 ? 'disabled' : '' %>" onclick="if(this.classList.contains('disabled')) return; document.querySelectorAll('.variant-item').forEach(el=>el.classList.remove('selected')); this.classList.add('selected'); document.getElementById('selectedVariant').value=this.dataset.name">
+                  <%= v.name %><% if (v.extra_price > 0) { %> (+GH₵<%= v.extra_price.toFixed(2) %>)<% } %>
+                </span>
+              <% }); %>
+            </div>
+          </div>
+        <% } %>
+
+        <form action="/shop/cart/add/<%= product.id %>" method="POST" class="add-to-cart-form">
+          <input type="hidden" name="variant" id="selectedVariant" value="">
+          <button type="submit" class="btn btn-primary btn-lg" <%= product.stock < 1 ? 'disabled' : '' %>>Add to Cart</button>
+        </form>
+
+        <% if (currentCustomer) { %>
+          <form action="/shop/wishlist/toggle/<%= product.id %>" method="POST" style="margin-top:0.5rem">
+            <button type="submit" class="btn btn-sm <%= inWishlist ? 'btn-danger' : 'btn-secondary' %>">
+              <%= inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' %>
+            </button>
+          </form>
+        <% } %>
+
+        <a href="/shop" class="btn btn-secondary" style="margin-top:0.5rem;display:inline-block">&larr; Back to Shop</a>
+      </div>
+    </div>
+
+    <section class="section" style="margin-top:3rem">
+      <h2>Customer Reviews</h2>
+      <% if (reviews.length) { %>
+        <div class="reviews-list">
+          <% reviews.forEach(function(r) { %>
+            <div class="review-item">
+              <div class="stars">
+                <% for (var i = 0; i < 5; i++) { %>
+                  <span class="star <%= i < r.rating ? 'filled' : '' %>">&#9733;</span>
+                <% } %>
+              </div>
+              <p><%= r.comment %></p>
+              <span class="review-author">— <%= r.customer_name %></span>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p>No reviews yet.</p>
+      <% } %>
+      <div class="add-review">
+        <h3>Write a Review</h3>
+        <form action="/shop/review/<%= product.id %>" method="POST">
+          <div class="form-group">
+            <label>Rating</label>
+            <select name="rating" required>
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Good</option>
+              <option value="3">3 - Average</option>
+              <option value="2">2 - Poor</option>
+              <option value="1">1 - Terrible</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="customer_name">Name</label>
+            <input type="text" name="customer_name" value="<%= currentCustomer ? currentCustomer.name : '' %>" required>
+          </div>
+          <div class="form-group">
+            <label for="comment">Review</label>
+            <textarea name="comment" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+      </div>
+    </section>
+
+    <% if (related.length) { %>
+      <section class="section" style="margin-top:3rem">
+        <h2>Related Products</h2>
+        <div class="product-grid">
+          <% related.forEach(function(p) { %>
+            <div class="product-card">
+              <a href="/shop/product/<%= p.id %>"><img src="<%= p.image %>" alt="<%= p.name %>" class="product-img"></a>
+              <div class="product-info">
+                <h3><%= p.name %></h3>
+                <div class="product-price">
+                  <span class="price-current">GH₵<%= parseFloat(p.price).toFixed(2) %></span>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </section>
+    <% } %>
+  </section>
+<%- include('partials/footer') %>

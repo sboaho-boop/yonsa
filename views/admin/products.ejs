@@ -1,0 +1,38 @@
+<%- include('../partials/header') %>
+  <section class="admin-page">
+    <h1>Products</h1>
+    <a href="/admin/products/add" class="btn btn-primary">Add Product</a>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Image</th><th>Name</th><th>Price</th><th>Original</th><th>Stock</th><th>Category</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <% products.forEach(function(p) { %>
+          <tr>
+            <td><img src="<%= p.image %>" alt="" style="width:50px;height:50px;object-fit:cover;border-radius:4px"></td>
+            <td><%= p.name %></td>
+            <td>GH₵<%= parseFloat(p.price).toFixed(2) %></td>
+            <td><%= p.original_price && p.original_price > p.price ? 'GH₵' + parseFloat(p.original_price).toFixed(2) : '-' %></td>
+            <td><%= p.stock %></td>
+            <td><%= p.category_name || '-' %></td>
+            <td><span class="status <%= p.status %>"><%= p.status %></span></td>
+            <td class="actions">
+              <a href="/admin/products/edit/<%= p.id %>" class="btn btn-sm">Edit</a>
+              <form action="/admin/products/discount/<%= p.id %>" method="POST" style="display:inline-flex;gap:4px">
+                <select name="discount_type" style="width:70px;padding:4px;font-size:0.8rem">
+                  <option value="percentage">%</option>
+                  <option value="fixed">GH₵</option>
+                </select>
+                <input type="number" name="discount_value" placeholder="Amt" min="1" style="width:55px;padding:4px;font-size:0.8rem">
+                <button type="submit" class="btn btn-sm">Apply</button>
+              </form>
+              <form action="/admin/products/delete/<%= p.id %>" method="POST" style="display:inline" onsubmit="return confirm('Delete this product?')">
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </section>
+<%- include('../partials/footer') %>
