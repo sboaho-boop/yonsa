@@ -45,18 +45,13 @@ const palette = {
 
 function svgImg(text, colors, size) {
   const w = size || 400, h = size || 400;
-  const c1 = colors ? colors[0] : '#e85d75';
-  const c2 = colors ? colors[1] : '#d44a62';
-  const s = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-    <defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:${c1}"/><stop offset="100%" style="stop-color:${c2}"/>
-    </linearGradient></defs>
-    <rect width="${w}" height="${h}" fill="url(#g)" rx="8"/>
-    <circle cx="${w*0.2}" cy="${h*0.2}" r="${w*0.3}" fill="rgba(255,255,255,0.08)"/>
-    <circle cx="${w*0.8}" cy="${h*0.8}" r="${w*0.25}" fill="rgba(255,255,255,0.06)"/>
-    <text x="50%" y="50%" text-anchor="middle" dy="0.35em" fill="#fff" font-family="sans-serif" font-size="${w*0.07}" font-weight="700">${text.replace(/&/g,'&amp;')}</text>
-  </svg>`;
-  return 'data:image/svg+xml,' + encodeURIComponent(s);
+  const c = colors ? colors[0] : '#e85d75';
+  const fs = Math.max(16, Math.round(w / 14));
+  const s = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
+    '<rect width="' + w + '" height="' + h + '" fill="' + c + '" rx="' + Math.round(w/50) + '"/>' +
+    '<text x="50%" y="50%" text-anchor="middle" dy="0.35em" fill="#fff" font-family="sans-serif" font-size="' + fs + '" font-weight="700">' + text.replace(/&/g,'&amp;') + '</text>' +
+    '</svg>';
+  return 'data:image/svg+xml;base64,' + btoa(s);
 }
 
 function prodImg(p) {
