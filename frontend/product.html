@@ -66,7 +66,7 @@
     if (p) {
       const isSale = p.origPrice && p.origPrice > p.price;
       el.innerHTML = '<div class="product-detail-grid">' +
-        '<div class="product-detail-image"><img src="' + p.img + '" alt="' + p.name + '"></div>' +
+        '<div class="product-detail-image"><img src="' + prodImg(p) + '" alt="' + p.name + '"></div>' +
         '<div class="product-detail-info">' +
         (isSale ? '<div class="sale-badge-lg">SALE</div>' : '') +
         '<h1>' + p.name + '</h1>' +
@@ -85,7 +85,7 @@
       if (related.length) {
         related.forEach(r => {
           rEl.innerHTML += '<div class="product-card">' +
-            '<a href="product.html?id=' + r.id + '"><img src="' + r.img + '" class="product-img" loading="lazy"></a>' +
+            '<a href="product.html?id=' + r.id + '"><img src="' + prodImg(r) + '" class="product-img" loading="lazy"></a>' +
             '<div class="product-info">' +
             '<h3>' + r.name + '</h3>' +
             '<div class="product-price"><span class="price-current">GH₵' + r.price.toFixed(2) + '</span></div>' +

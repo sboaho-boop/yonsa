@@ -21,39 +21,90 @@
       </div>
     </div>
   </nav>
+
   <main class="container">
-    <section class="hero">
-      <div class="hero-content">
-        <h1>YONSA Mothercare</h1>
-        <p>Mid-Year Sale — Up to 40% Off on Baby &amp; Maternity Essentials</p>
-        <p class="hero-sub">Premium products for mothers and babies across Ghana</p>
-        <a href="shop.html" class="btn btn-primary btn-lg">Shop Now</a>
+    <section class="hero" id="hero">
+      <div class="hero-floating"></div>
+      <div class="hero-floating"></div>
+      <div class="hero-floating"></div>
+      <div class="hero-slides">
+        <div class="hero-slide active">
+          <div class="hero-content">
+            <div class="hero-badge">&#127881; Mid-Year Sale</div>
+            <h1>Up to 40% Off</h1>
+            <p>Baby &amp; Maternity Essentials</p>
+            <p class="hero-sub">Premium products for mothers and babies across Ghana</p>
+            <div class="hero-actions">
+              <a href="shop.html" class="btn btn-primary btn-lg">Shop Now</a>
+              <a href="about.html" class="btn btn-secondary btn-lg">Learn More</a>
+            </div>
+          </div>
+        </div>
+        <div class="hero-slide">
+          <div class="hero-content">
+            <div class="hero-badge">&#128151; Quality You Can Trust</div>
+            <h1>Safe &amp; Gentle</h1>
+            <p>All products meet the highest safety standards</p>
+            <p class="hero-sub">Curated for your little one's comfort</p>
+            <div class="hero-actions">
+              <a href="shop.html?cat=Baby+Sets" class="btn btn-primary btn-lg">Baby Sets</a>
+              <a href="shop.html?cat=Maternity+Wear" class="btn btn-secondary btn-lg">Maternity Wear</a>
+            </div>
+          </div>
+        </div>
+        <div class="hero-slide">
+          <div class="hero-content">
+            <div class="hero-badge">&#128666; Free Delivery</div>
+            <h1>Shop from Home</h1>
+            <p>Fast &amp; reliable delivery across Ghana</p>
+            <p class="hero-sub">Mobile Money &amp; Card payments accepted</p>
+            <div class="hero-actions">
+              <a href="shop.html" class="btn btn-primary btn-lg">Start Shopping</a>
+              <a href="contact.html" class="btn btn-secondary btn-lg">Contact Us</a>
+            </div>
+          </div>
+        </div>
       </div>
+      <div class="hero-dots" id="heroDots"></div>
     </section>
 
-    <section class="section">
+    <section class="section animate-in">
       <h2>Shop by Category</h2>
       <div class="category-grid" id="categories"></div>
     </section>
 
     <section class="section">
-      <div class="section-header">
+      <div class="section-header animate-in">
         <h2>Featured Products</h2>
         <a href="shop.html" class="btn btn-sm btn-primary">View All</a>
       </div>
       <div class="product-grid" id="featuredProducts"></div>
     </section>
 
-    <section class="section sale-section" id="saleSection" style="display:none">
-      <h2>On Sale</h2>
+    <section class="section sale-section animate-in" id="saleSection" style="display:none">
+      <h2>&#127873; On Sale — Limited Time Offers</h2>
       <div class="product-grid" id="saleProducts"></div>
     </section>
 
     <section class="section">
-      <h2>What Our Customers Say</h2>
-      <div class="reviews-grid" id="reviews"></div>
+      <h2 class="animate-in">&#128172; What Our Customers Say</h2>
+      <div class="review-grid" id="reviews"></div>
+    </section>
+
+    <section class="section newsletter animate-in">
+      <h2>Stay in the Loop</h2>
+      <p>Get updates on new arrivals, sales, and parenting tips</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault();alert('Thanks for subscribing!')">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
     </section>
   </main>
+
+  <div class="floating-badge">
+    <a href="shop.html">&#128722; Shop Now — Up to 40% Off</a>
+  </div>
+
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-col">
@@ -81,55 +132,84 @@
         <p>Accra, Ghana</p>
       </div>
     </div>
-    <div class="container footer-bottom">
-      <p>&copy; 2026 YONSA Mothercare. All rights reserved.</p>
-    </div>
+    <div class="container footer-bottom"><p>&copy; 2026 YONSA Mothercare. All rights reserved.</p></div>
   </footer>
 
   <script src="js/data.js"></script>
   <script>
     updateCartCount();
 
-    function renderProductCard(p, sale) {
-      return '<div class="product-card' + (sale ? ' sale' : '') + '">' +
+    // Hero slider
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.getElementById('heroDots');
+    let current = 0;
+    slides.forEach((_, i) => {
+      dots.innerHTML += '<button class="hero-dot' + (i === 0 ? ' active' : '') + '" onclick="goSlide(' + i + ')"></button>';
+    });
+    function goSlide(i) {
+      slides.forEach(s => s.classList.remove('active'));
+      dots.querySelectorAll('.hero-dot').forEach(d => d.classList.remove('active'));
+      slides[i].classList.add('active');
+      dots.children[i].classList.add('active');
+      current = i;
+    }
+    setInterval(function() { goSlide((current + 1) % slides.length); }, 5000);
+
+    // Categories
+    const catGrid = document.getElementById('categories');
+    categories.forEach(function(c) {
+      catGrid.innerHTML += '<a href="shop.html?cat=' + encodeURIComponent(c) + '" class="category-card animate-in-d1">' +
+        '<img src="' + catImg(c) + '" alt="' + c + '" loading="lazy">' +
+        '<h3>' + c + '</h3></a>';
+    });
+
+    // Featured products
+    const featuredEl = document.getElementById('featuredProducts');
+    getFeatured().forEach(function(p) {
+      const sale = p.origPrice && p.origPrice > p.price;
+      featuredEl.innerHTML += '<div class="product-card animate-in-d1">' +
         (sale ? '<div class="sale-badge">SALE</div>' : '') +
-        '<a href="product.html?id=' + p.id + '"><img src="' + p.img + '" alt="' + p.name + '" class="product-img" loading="lazy"></a>' +
+        '<a href="product.html?id=' + p.id + '"><img src="' + prodImg(p) + '" alt="' + p.name + '" class="product-img" loading="lazy"></a>' +
         '<div class="product-info">' +
         '<h3>' + p.name + '</h3>' +
         '<p class="product-category">' + p.cat + '</p>' +
         '<div class="product-price">' +
-        (p.origPrice && p.origPrice > p.price ?
-          '<span class="price-current">GH₵' + p.price.toFixed(2) + '</span><span class="price-old">GH₵' + p.origPrice.toFixed(2) + '</span>' :
-          '<span class="price-current">GH₵' + p.price.toFixed(2) + '</span>') +
+        (sale ? '<span class="price-current">GH₵' + p.price.toFixed(2) + '</span><span class="price-old">GH₵' + p.origPrice.toFixed(2) + '</span>' : '<span class="price-current">GH₵' + p.price.toFixed(2) + '</span>') +
         '</div>' +
-        '<div class="product-actions">' +
-        '<a href="product.html?id=' + p.id + '" class="btn btn-sm">Details</a>' +
-        '<button onclick="addToCart(' + p.id + ',\'\');this.textContent=\'Added!\';setTimeout(()=>this.textContent=\'Add to Cart\',1000)" class="btn btn-sm btn-primary">Add to Cart</button>' +
-        '</div></div></div>';
-    }
-
-    const catGrid = document.getElementById('categories');
-    categories.forEach(c => {
-      catGrid.innerHTML += '<a href="shop.html?cat=' + encodeURIComponent(c) + '" class="category-card">' +
-        '<img src="https://placehold.co/300x300?text=' + encodeURIComponent(c) + '" alt="' + c + '" loading="lazy">' +
-        '<h3>' + c + '</h3></a>';
+        '<button onclick="addToCart(' + p.id + ',\'\');this.textContent=\'Added!\';setTimeout(()=>this.textContent=\'Add to Cart\',1000)" class="btn btn-sm btn-primary" style="width:100%">Add to Cart</button>' +
+        '</div></div>';
     });
 
-    const featuredEl = document.getElementById('featuredProducts');
-    getFeatured().forEach(p => featuredEl.innerHTML += renderProductCard(p, false));
-
+    // Sale products
     const discounted = getDiscounted();
     if (discounted.length) {
       document.getElementById('saleSection').style.display = 'block';
       const saleEl = document.getElementById('saleProducts');
-      discounted.forEach(p => saleEl.innerHTML += renderProductCard(p, true));
+      discounted.forEach(function(p) {
+        saleEl.innerHTML += '<div class="product-card animate-in-d1">' +
+          '<div class="sale-badge">SALE</div>' +
+          '<a href="product.html?id=' + p.id + '"><img src="' + prodImg(p) + '" alt="' + p.name + '" class="product-img" loading="lazy"></a>' +
+          '<div class="product-info">' +
+          '<h3>' + p.name + '</h3>' +
+          '<p class="product-category">' + p.cat + '</p>' +
+          '<div class="product-price">' +
+          '<span class="price-current">GH₵' + p.price.toFixed(2) + '</span><span class="price-old">GH₵' + p.origPrice.toFixed(2) + '</span>' +
+          '<span class="discount-badge">-' + Math.round((1 - p.price / p.origPrice) * 100) + '%</span>' +
+          '</div>' +
+          '<button onclick="addToCart(' + p.id + ',\'\');this.textContent=\'Added!\';setTimeout(()=>this.textContent=\'Add to Cart\',1000)" class="btn btn-sm btn-primary" style="width:100%">Grab Deal</button>' +
+          '</div></div>';
+      });
     }
 
+    // Reviews
     const reviewsEl = document.getElementById('reviews');
-    reviews.forEach(r => {
-      let stars = '';
-      for (let i = 0; i < 5; i++) stars += '<span class="star' + (i < r.rating ? ' filled' : '') + '">&#9733;</span>';
-      reviewsEl.innerHTML += '<div class="review-card"><div class="stars">' + stars + '</div><p>"' + r.comment + '"</p><span class="review-author">— ' + r.name + '</span></div>';
+    reviews.forEach(function(r) {
+      var stars = '';
+      for (var i = 0; i < 5; i++) stars += '<span style="color:' + (i < r.rating ? '#f1c40f' : '#e0ddd9') + '">&#9733;</span>';
+      reviewsEl.innerHTML += '<div class="review-card animate-in-d1">' +
+        '<div class="review-stars">' + stars + '</div>' +
+        '<p>"' + r.comment + '"</p>' +
+        '<div class="review-author">— ' + r.name + '</div></div>';
     });
   </script>
 </body>
