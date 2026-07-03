@@ -29,7 +29,7 @@ body {
 .nav-container { display: flex; justify-content: space-between; align-items: center; }
 .logo { font-size: 1.4rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: 1px; }
 .logo span { color: #e85d75; font-weight: 300; }
-.logo-img { height: 50px; width: auto; display: block; }
+.logo-img { height: 70px; width: auto; display: block; }
 .logo small { display: block; font-size: 0.55rem; font-weight: 300; color: #aaa; letter-spacing: 3px; text-transform: uppercase; margin-top: -2px; }
 .mobile-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
 .nav-links { display: flex; gap: 0.5rem; align-items: center; }
@@ -232,4 +232,5 @@ main { flex: 1; padding: 1.5rem 0; }
   .product-img { height: 170px; }
   .hero-actions { flex-direction: column; align-items: center; }
   .newsletter-form { flex-direction: column; }
+  .logo-img { height: 45px; }
 }
