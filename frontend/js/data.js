@@ -1,20 +1,22 @@
+function u(id) { return 'https://images.unsplash.com/photo-' + id + '?w=400&h=400&fit=crop'; }
+
 const defaultProducts = [
-  { id: 1, name: 'Newborn Baby Set', desc: 'Soft cotton baby set with hat and booties', price: 45.00, origPrice: 59.99, cat: 'Baby Sets', stock: 50, featured: true },
-  { id: 2, name: 'Toddler Summer Dress', desc: 'Light floral summer dress for girls', price: 35.00, origPrice: 44.99, cat: 'Kids Wear', stock: 40, featured: true },
-  { id: 3, name: 'Maternity Gown', desc: 'Comfortable pregnancy night gown', price: 55.00, origPrice: 69.99, cat: 'Maternity Wear', stock: 30, featured: true },
-  { id: 4, name: 'Baby Sneakers', desc: 'Non-slip soft sole baby sneakers', price: 28.00, origPrice: 34.99, cat: 'Baby Shoes', stock: 60, featured: true },
-  { id: 5, name: 'Kids Backpack', desc: 'Colorful cartoon school backpack', price: 32.00, origPrice: 39.99, cat: 'School Bags', stock: 45, featured: false },
-  { id: 6, name: 'Baby Feeding Set', desc: 'BPA-free plate, bowl, cup & spoon set', price: 25.00, origPrice: 32.99, cat: 'Feeding', stock: 70, featured: true },
-  { id: 7, name: 'Baby Shampoo', desc: 'Gentle tear-free baby shampoo 200ml', price: 12.00, origPrice: 15.99, cat: 'Toiletries', stock: 100, featured: false },
-  { id: 8, name: 'Baby Boy Set', desc: 'Onesie, pants & bib cotton set', price: 42.00, origPrice: 54.99, cat: 'Baby Sets', stock: 35, featured: false },
-  { id: 9, name: 'Kids Polo Shirt', desc: 'Cotton polo shirt for boys', price: 22.00, origPrice: 27.99, cat: 'Kids Wear', stock: 55, featured: true },
-  { id: 10, name: 'Nursing Cover', desc: 'Multi-use breastfeeding cover', price: 30.00, origPrice: 38.99, cat: 'Maternity Wear', stock: 25, featured: false },
-  { id: 11, name: 'Baby Sandals', desc: 'Breathable leather baby sandals', price: 24.00, origPrice: 29.99, cat: 'Baby Shoes', stock: 40, featured: false },
-  { id: 12, name: 'Lunch Bag', desc: 'Insulated kids lunch bag', price: 18.00, origPrice: 22.99, cat: 'School Bags', stock: 65, featured: true },
-  { id: 13, name: 'Sippy Cup', desc: 'Leak-proof trainer cup 250ml', price: 10.00, origPrice: 13.99, cat: 'Feeding', stock: 90, featured: false },
-  { id: 14, name: 'Baby Lotion', desc: 'Moisturizing baby lotion 300ml', price: 15.00, origPrice: 18.99, cat: 'Toiletries', stock: 80, featured: false },
-  { id: 15, name: 'Winter Baby Set', desc: 'Warm fleece baby set with hood', price: 52.00, origPrice: 64.99, cat: 'Baby Sets', stock: 30, featured: true },
-  { id: 16, name: 'Girls Tutu Dress', desc: 'Princess tutu dress with headband', price: 38.00, origPrice: 47.99, cat: 'Kids Wear', stock: 35, featured: false },
+  { id: 1, name: 'Newborn Baby Set', desc: 'Soft cotton baby set with hat and booties', price: 45.00, origPrice: 59.99, cat: 'Baby Sets', stock: 50, featured: true, img: u('1519238263530-99bdd11df2ea') },
+  { id: 2, name: 'Toddler Summer Dress', desc: 'Light floral summer dress for girls', price: 35.00, origPrice: 44.99, cat: 'Kids Wear', stock: 40, featured: true, img: u('1515488042361-ee00e0ddd4e4') },
+  { id: 3, name: 'Maternity Gown', desc: 'Comfortable pregnancy night gown', price: 55.00, origPrice: 69.99, cat: 'Maternity Wear', stock: 30, featured: true, img: u('1490481651871-ab68de25d43d') },
+  { id: 4, name: 'Baby Sneakers', desc: 'Non-slip soft sole baby sneakers', price: 28.00, origPrice: 34.99, cat: 'Baby Shoes', stock: 60, featured: true, img: u('1549298916-b41d501d3772') },
+  { id: 5, name: 'Kids Backpack', desc: 'Colorful cartoon school backpack', price: 32.00, origPrice: 39.99, cat: 'School Bags', stock: 45, featured: false, img: u('1560506840-ec148e82a604') },
+  { id: 6, name: 'Baby Feeding Set', desc: 'BPA-free plate, bowl, cup & spoon set', price: 25.00, origPrice: 32.99, cat: 'Feeding', stock: 70, featured: true, img: u('1622290291468-a28f7a7dc6a8') },
+  { id: 7, name: 'Baby Shampoo', desc: 'Gentle tear-free baby shampoo 200ml', price: 12.00, origPrice: 15.99, cat: 'Toiletries', stock: 100, featured: false, img: u('1622290291165-d341f1938b8a') },
+  { id: 8, name: 'Baby Boy Set', desc: 'Onesie, pants & bib cotton set', price: 42.00, origPrice: 54.99, cat: 'Baby Sets', stock: 35, featured: false, img: u('1519451241324-20b4ea2c4220') },
+  { id: 9, name: 'Kids Polo Shirt', desc: 'Cotton polo shirt for boys', price: 22.00, origPrice: 27.99, cat: 'Kids Wear', stock: 55, featured: true, img: u('1544716278-ca5e3f4abd8c') },
+  { id: 10, name: 'Nursing Cover', desc: 'Multi-use breastfeeding cover', price: 30.00, origPrice: 38.99, cat: 'Maternity Wear', stock: 25, featured: false, img: u('1546015720-b8b30df5aa27') },
+  { id: 11, name: 'Baby Sandals', desc: 'Breathable leather baby sandals', price: 24.00, origPrice: 29.99, cat: 'Baby Shoes', stock: 40, featured: false, img: u('1556905055-8f358a7a47b2') },
+  { id: 12, name: 'Lunch Bag', desc: 'Insulated kids lunch bag', price: 18.00, origPrice: 22.99, cat: 'School Bags', stock: 65, featured: true, img: u('1543346242-2b8e41fb91ca') },
+  { id: 13, name: 'Sippy Cup', desc: 'Leak-proof trainer cup 250ml', price: 10.00, origPrice: 13.99, cat: 'Feeding', stock: 90, featured: false, img: u('1616666428759-679a7d578307') },
+  { id: 14, name: 'Baby Lotion', desc: 'Moisturizing baby lotion 300ml', price: 15.00, origPrice: 18.99, cat: 'Toiletries', stock: 80, featured: false, img: u('1684244160171-97f5dac39204') },
+  { id: 15, name: 'Winter Baby Set', desc: 'Warm fleece baby set with hood', price: 52.00, origPrice: 64.99, cat: 'Baby Sets', stock: 30, featured: true, img: u('1522771930-78848d9293e8') },
+  { id: 16, name: 'Girls Tutu Dress', desc: 'Princess tutu dress with headband', price: 38.00, origPrice: 47.99, cat: 'Kids Wear', stock: 35, featured: false, img: u('1559454403-b8fb88521f11') },
 ];
 
 const defaultCategories = ['Baby Sets', 'Kids Wear', 'Maternity Wear', 'Baby Shoes', 'School Bags', 'Feeding', 'Toiletries'];
