@@ -1,4 +1,4 @@
-const products = [
+const defaultProducts = [
   { id: 1, name: 'Newborn Baby Set', desc: 'Soft cotton baby set with hat and booties', price: 45.00, origPrice: 59.99, cat: 'Baby Sets', stock: 50, featured: true },
   { id: 2, name: 'Toddler Summer Dress', desc: 'Light floral summer dress for girls', price: 35.00, origPrice: 44.99, cat: 'Kids Wear', stock: 40, featured: true },
   { id: 3, name: 'Maternity Gown', desc: 'Comfortable pregnancy night gown', price: 55.00, origPrice: 69.99, cat: 'Maternity Wear', stock: 30, featured: true },
@@ -17,7 +17,13 @@ const products = [
   { id: 16, name: 'Girls Tutu Dress', desc: 'Princess tutu dress with headband', price: 38.00, origPrice: 47.99, cat: 'Kids Wear', stock: 35, featured: false },
 ];
 
-const categories = ['Baby Sets', 'Kids Wear', 'Maternity Wear', 'Baby Shoes', 'School Bags', 'Feeding', 'Toiletries'];
+const defaultCategories = ['Baby Sets', 'Kids Wear', 'Maternity Wear', 'Baby Shoes', 'School Bags', 'Feeding', 'Toiletries'];
+
+function getAllCategories() {
+  const cats = new Set(defaultCategories);
+  loadUserProducts().forEach(p => cats.add(p.cat));
+  return Array.from(cats);
+}
 
 const reviews = [
   { name: 'Akua M.', rating: 5, comment: 'My baby loves this set! Very soft and comfortable.' },
@@ -55,11 +61,42 @@ function svgImg(text, colors, size) {
 }
 
 function prodImg(p) {
+  if (p.img) return p.img;
   return svgImg(p.name, palette[p.cat], 400);
 }
 
 function catImg(c) {
   return svgImg(c, palette[c] || ['#e85d75','#d44a62'], 300);
+}
+
+function loadUserProducts() {
+  try { return JSON.parse(localStorage.getItem('yonsa_user_products')) || []; } catch { return []; }
+}
+
+function saveUserProducts(list) {
+  localStorage.setItem('yonsa_user_products', JSON.stringify(list));
+}
+
+function getAllProducts() {
+  return [...defaultProducts, ...loadUserProducts()];
+}
+
+function getNextId() {
+  const all = getAllProducts();
+  return all.length ? Math.max(...all.map(p => p.id)) + 1 : 1;
+}
+
+function addUserProduct(p) {
+  p.id = getNextId();
+  p.featured = false;
+  const list = loadUserProducts();
+  list.push(p);
+  saveUserProducts(list);
+  return p;
+}
+
+function deleteUserProduct(id) {
+  saveUserProducts(loadUserProducts().filter(p => p.id !== id));
 }
 
 function getCart() {
@@ -72,7 +109,7 @@ function saveCart(cart) {
 
 function addToCart(id, variant) {
   const cart = getCart();
-  const product = products.find(p => p.id === id);
+  const product = getAllProducts().find(p => p.id === id);
   if (!product) return;
   const key = id + '-' + (variant || '');
   const existing = cart.findIndex(i => i.key === key);
@@ -92,13 +129,13 @@ function updateCartCount() {
 }
 
 function getProductById(id) {
-  return products.find(p => p.id === parseInt(id));
+  return getAllProducts().find(p => p.id === parseInt(id));
 }
 
 function getDiscounted() {
-  return products.filter(p => p.origPrice && p.origPrice > p.price);
+  return getAllProducts().filter(p => p.origPrice && p.origPrice > p.price);
 }
 
 function getFeatured() {
-  return products.filter(p => p.featured);
+  return getAllProducts().filter(p => p.featured);
 }

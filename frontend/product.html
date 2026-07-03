@@ -18,6 +18,7 @@
         <a href="track.html">Track</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
+        <a href="admin.html">Admin</a>
       </div>
     </div>
   </nav>
@@ -80,7 +81,7 @@
         '<a href="shop.html" class="btn btn-secondary">&larr; Back to Shop</a>' +
         '</div></div>';
 
-      const related = products.filter(r => r.cat === p.cat && r.id !== p.id).slice(0, 4);
+      const related = getAllProducts().filter(r => r.cat === p.cat && r.id !== p.id).slice(0, 4);
       const rEl = document.getElementById('relatedProducts');
       if (related.length) {
         related.forEach(r => {

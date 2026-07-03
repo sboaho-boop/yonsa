@@ -18,6 +18,7 @@
         <a href="track.html">Track</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
+        <a href="admin.html">Admin</a>
       </div>
     </div>
   </nav>
@@ -69,7 +70,7 @@
   <script>
     updateCartCount();
     const catFilters = document.getElementById('catFilters');
-    categories.forEach(c => {
+    getAllCategories().forEach(c => {
       catFilters.innerHTML += '<a href="?cat=' + encodeURIComponent(c) + '">' + c + '</a>';
     });
 
@@ -91,7 +92,7 @@
     if (searchTerm) document.getElementById('searchInput').value = searchTerm;
 
     const grid = document.getElementById('productGrid');
-    let filtered = products;
+    let filtered = getAllProducts();
     if (selectedCat) filtered = filtered.filter(p => p.cat === selectedCat);
     if (searchTerm) filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.desc.toLowerCase().includes(searchTerm.toLowerCase()));
 

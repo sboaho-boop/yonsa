@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — YONSA Mothercare</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-login { display: flex; justify-content: center; align-items: center; min-height: 70vh; }
+    .admin-login form { background: #fff; padding: 2.5rem; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); width: 100%; max-width: 380px; border: 1px solid #f0edeb; text-align: center; }
+    .admin-panel { display: none; }
+    .admin-panel.show { display: block; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .admin-card { background: #fff; padding: 1.5rem 2rem; border-radius: 14px; border: 1px solid #f0edeb; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+    .admin-card h3 { margin-bottom: 1.2rem; font-size: 1.1rem; }
+    .admin-card .form-group { margin-bottom: 1rem; }
+    .admin-card .form-group label { font-size: 0.82rem; }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .admin-table th, .admin-table td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid #f0edeb; }
+    .admin-table th { font-weight: 600; color: #5a5a6a; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .admin-table td { vertical-align: middle; }
+    .admin-table .thumb { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; }
+    .admin-actions { display: flex; gap: 0.5rem; margin-top: 1.5rem; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 0.5rem; }
+    .img-preview { max-width: 200px; max-height: 150px; margin-top: 0.5rem; border-radius: 8px; display: none; border: 1px solid #e0ddd9; }
+    .img-preview.show { display: block; }
+    .inline-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; vertical-align: middle; margin-right: 6px; }
+    @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">YONSA <span>Mothercare</span><small>Admin Panel</small></a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">&#9776;</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="cart.html">Cart <span class="cart-count">0</span></a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div id="loginScreen" class="admin-login">
+      <form onsubmit="adminLogin(event)">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDgwIDgwIj48cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IiNlODVkNzUiIHJ4PSIxNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjZmZmIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9IjcwMCI+WTwvdGV4dD48L3N2Zz4=" style="width:70px;height:70px;border-radius:16px;margin-bottom:1rem">
+        <h1>Admin Login</h1>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="adminPass" placeholder="Enter admin password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Login</button>
+        <p style="margin-top:1rem;font-size:0.8rem;color:#9a9aaa"><a href="index.html" style="color:#e85d75">&larr; Back to site</a></p>
+      </form>
+    </div>
+
+    <div id="adminPanel" class="admin-panel">
+      <div class="admin-header">
+        <h1>Product Admin</h1>
+        <button onclick="adminLogout()" class="btn btn-sm btn-danger">Logout</button>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <h3>+ Add New Product</h3>
+          <form id="addProductForm" onsubmit="addProduct(event)">
+            <div class="form-group">
+              <label>Product Name *</label>
+              <input type="text" id="af_name" required>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="af_desc" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Price (GH₵) *</label>
+                <input type="number" id="af_price" step="0.01" min="0" required>
+              </div>
+              <div class="form-group">
+                <label>Compare Price</label>
+                <input type="number" id="af_orig" step="0.01" min="0" placeholder="Original price">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Category *</label>
+                <select id="af_cat" required></select>
+              </div>
+              <div class="form-group">
+                <label>New Category</label>
+                <input type="text" id="af_newCat" placeholder="Or type new category">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Stock</label>
+              <input type="number" id="af_stock" value="10" min="0">
+            </div>
+            <div class="form-group">
+              <label>Product Image</label>
+              <input type="file" id="af_img" accept="image/*" onchange="previewImage(event)">
+              <img id="imgPreview" class="img-preview">
+              <p style="font-size:0.75rem;color:#9a9aaa;margin-top:0.3rem">Leave empty to auto-generate a colored placeholder</p>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%">Add Product</button>
+          </form>
+        </div>
+
+        <div class="admin-card">
+          <h3>All Products (<span id="productCount">0</span>)</h3>
+          <div style="overflow-x:auto">
+            <table class="admin-table">
+              <thead><tr><th></th><th>Name</th><th>Price</th><th>Category</th><th></th></tr></thead>
+              <tbody id="productList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid"><div class="footer-col"><h3>YONSA <span>Mothercare</span></h3></div></div>
+    <div class="container footer-bottom"><p>&copy; 2026 YONSA Mothercare</p></div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    updateCartCount();
+
+    const ADMIN_PASS = 'yonsa123';
+
+    // Populate category dropdown
+    const catSelect = document.getElementById('af_cat');
+    function populateCats() {
+      catSelect.innerHTML = '';
+      getAllCategories().forEach(function(c) {
+        catSelect.innerHTML += '<option value="' + c.replace(/"/g,'&quot;') + '">' + c + '</option>';
+      });
+    }
+    populateCats();
+
+    function adminLogin(e) {
+      e.preventDefault();
+      if (document.getElementById('adminPass').value === ADMIN_PASS) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminPanel').classList.add('show');
+        renderProductList();
+      } else {
+        alert('Incorrect password');
+      }
+    }
+
+    function adminLogout() {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('adminPanel').classList.remove('show');
+      document.getElementById('adminPass').value = '';
+    }
+
+    function previewImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const img = document.getElementById('imgPreview');
+        img.src = ev.target.result;
+        img.classList.add('show');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addProduct(e) {
+      e.preventDefault();
+      const name = document.getElementById('af_name').value.trim();
+      const price = parseFloat(document.getElementById('af_price').value);
+      if (!name || !price) { alert('Name and price are required'); return; }
+      const cat = document.getElementById('af_newCat').value.trim() || document.getElementById('af_cat').value;
+      const imgPreview = document.getElementById('imgPreview');
+      const img = imgPreview.classList.contains('show') ? imgPreview.src : '';
+      const p = {
+        name: name,
+        desc: document.getElementById('af_desc').value.trim(),
+        price: price,
+        origPrice: parseFloat(document.getElementById('af_orig').value) || 0,
+        cat: cat,
+        stock: parseInt(document.getElementById('af_stock').value) || 10,
+        img: img
+      };
+      if (p.origPrice <= p.price) p.origPrice = 0;
+      addUserProduct(p);
+      // Reset form
+      document.getElementById('addProductForm').reset();
+      imgPreview.classList.remove('show');
+      imgPreview.src = '';
+      populateCats();
+      renderProductList();
+      alert('Product added!');
+    }
+
+    function renderProductList() {
+      const all = getAllProducts();
+      document.getElementById('productCount').textContent = all.length;
+      const tbody = document.getElementById('productList');
+      tbody.innerHTML = '';
+      all.slice().reverse().forEach(function(p) {
+        const isUser = loadUserProducts().some(function(u) { return u.id === p.id; });
+        const thumb = p.img ? p.img : prodImg(p);
+        tbody.innerHTML += '<tr>' +
+          '<td><img src="' + thumb + '" class="thumb" alt=""></td>' +
+          '<td><strong>' + p.name + '</strong><br><span style="font-size:0.75rem;color:#9a9aaa">' + p.cat + '</span></td>' +
+          '<td>GH₵' + p.price.toFixed(2) + (p.origPrice > p.price ? '<br><span style="font-size:0.75rem;color:#aaa;text-decoration:line-through">GH₵' + p.origPrice.toFixed(2) + '</span>' : '') + '</td>' +
+          '<td>' + p.cat + '</td>' +
+          '<td>' + (isUser ? '<button class="btn btn-sm btn-danger" onclick="deleteProduct(' + p.id + ')">Delete</button>' : '<span style="font-size:0.75rem;color:#9a9aaa">Default</span>') + '</td>' +
+          '</tr>';
+      });
+    }
+
+    function deleteProduct(id) {
+      if (!confirm('Delete this product?')) return;
+      deleteUserProduct(id);
+      renderProductList();
+    }
+  </script>
+</body>
+</html>
